@@ -3,6 +3,8 @@ Some snippets of TypeScript that might occasionally prove useful:
 
 ## Keys of a type:
 
+Given an object and a type of value (T), this type will include object keys only where the corresponding value is T.
+
 ```typescript
 type KeysOfType<T, V> = ({[P in keyof T]: T[P] extends V ? P : never })[keyof T];
 type KeyOfStringValue<T> = KeysOfType<T, string>;
