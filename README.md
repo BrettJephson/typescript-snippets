@@ -97,3 +97,37 @@ export type DaysOfDecember = Range<1, 31>;
 const outOfRange: DaysOfDecember = 50; // ts error as value is out of range
 const inRange: DaysOfDecember = 10; // ok as value is between 1 and 31
 ```
+
+## Either / Or
+
+Allow an object to have either one set of fields or another.
+
+```typescript
+type Only<T, U> = {
+    [P in keyof T]: T[P];
+} & {
+    [P in keyof U]?: never;
+};
+
+type Either<T, U> = Only<T, U> | Only<U, T>;
+```
+
+### Usage
+
+```typescript
+interface Label {
+    label: string;
+}
+
+interface LabelledBy {
+    labelledBy: string;
+}
+
+type LabelOptions =  Either<Label, LabelledBy>;
+
+const label: LabelOptions = { label: 'test' };
+const labelledBy: LabelOptions = { labelledBy: 'test' };
+const fail: LabelOptions = { label: 'test', labelledBy: 'test' }; // this one fails because it can't be both a Label and LabelledBy
+```
+
+[Example on TypeScript Playground](https://www.typescriptlang.org/play?#code/JYOwLgpgTgZghgYwgAgDJwEYQDbIN4BQyxy2mOAXMgM5hSgDmA3AQL4EGiSyIrpbZsEACYAhAJ74iJMgKFjxVWvRDM2HMOIAOKAPIhs4gDwAVADTIAqgD5kAXiklkAbQAKyUMgDWEcQHsYZBMAXSoTN2CWVmQAMkcSNw8Qb18Aq2CAfioQCAA3aCiWAk0dZABRYDAAC2hTCxt7ZH1DOqtbAB8mg2NLCxNrIpK+cmxdLTBgPxBqRvLKmqgjfhwLZcERCQGOBCnaUhGqNbGJ3ca8fYEqAHJIWivkVhYd6bALnHkJQ5Hjyemzt-WCmutzA90eBGee3gwGwXwEP1ODnOskoyBuEDuFhRgM+aJBYKYQA)
