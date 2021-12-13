@@ -159,3 +159,28 @@ const failingState: Prefixed<typeof currentState, 'update'> = {
 ```
 
 [Example on TypeScript Playground](https://www.typescriptlang.org/play?ssl=4&ssc=90&pln=4&pc=88#code/FAYw9gdgzgLgBGARgKwIJwLxwN5ymAWwFMYALASwgHMAuOAIgENER6AaORqougRgAY4AXwDcwYDACeAByJwACgCciAM3IAPIgBMAPABUOS1RrhF1MIhC1Q8MRZSoA+TDjgBtANJxKcANZFJMBU4PTgAMlt7ak4bAAMAEmwjNXUhADpEjyFYgF0AagB+Oj1PHJFhcXBoeCRkACE6ZI1tHSlZIIQUVA56ZWkAG0YQInpnLGxgOCmGPsHhtPxiMgd6OnoIIgB3OAA3Rn6AVxG2SeneogGhojSuEboAJgBWYFFTuCA)
+
+## 
+
+Check that a prefix plus a set of values are valid keys for an object.
+
+```typescript
+type CheckPrefix<T, K extends string & keyof T, Suffix extends string> = K extends `${infer Prefix}${Suffix}` ? Prefix : never;
+```
+
+### Usage
+
+```typescript
+const obj = {
+ something100: "Test 1",
+ something200: "Test 2"
+};
+
+type Obj = typeof obj;
+type ObjKeys = keyof Obj;
+
+const pass: CheckPrefix<Obj, ObjKeys, "100" | "200"> = "something";
+const fail: CheckPrefix<Obj, ObjKeys, "100" | "200"> = "nothing";
+```
+
+[Example on TypeScript Playground](https://www.typescriptlang.org/vo/play?#code/C4TwDgpgBAwgFhAxgawAoCcIDMCWAPAHgBUAaKAaSgj2AgDsATAZyieHRzoHMoAyKZBBAB7LFFJQAygFcsuPFRr1mrdpy4A+KAF4Ki2oxYADACQBvTlgjooGbPgC+5mXMdGoAfluZ5UAFxQdBAAbtYA3ABQEYjCdGxQwgBGAFY6UGYRrMIAthDAcOoAjAAMxQEAREQQ8YXlJJlMOXkF3ABMpRVV8a3lEQ6REaCQUADyKWlDEKIJKZGToynkQiy6giJiY8kDMXHAUGAAhkxMAfBIaD74BJtkm0sgTGTlJcXlUAA+UOXtr1q65Y1cvl1OVIjt4lgDjgADanBAoOzya4pW6LZZPF5vT7fUrlP5fOjCYHcUFAA)
