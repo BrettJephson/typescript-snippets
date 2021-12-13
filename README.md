@@ -131,3 +131,31 @@ const fail: LabelOptions = { label: 'test', labelledBy: 'test' }; // this one fa
 ```
 
 [Example on TypeScript Playground](https://www.typescriptlang.org/play?#code/JYOwLgpgTgZghgYwgAgDJwEYQDbIN4BQyxy2mOAXMgM5hSgDmA3AQL4EGiSyIrpbZsEACYAhAJ74iJMgKFjxVWvRDM2HMOIAOKAPIhs4gDwAVADTIAqgD5kAXiklkAbQAKyUMgDWEcQHsYZBMAXSoTN2CWVmQAMkcSNw8Qb18Aq2CAfioQCAA3aCiWAk0dZABRYDAAC2hTCxt7ZH1DOqtbAB8mg2NLCxNrIpK+cmxdLTBgPxBqRvLKmqgjfhwLZcERCQGOBCnaUhGqNbGJ3ca8fYEqAHJIWivkVhYd6bALnHkJQ5Hjyemzt-WCmutzA90eBGee3gwGwXwEP1ODnOskoyBuEDuFhRgM+aJBYKYQA)
+
+## Prefix
+
+Map an object's keys to another object where the keys are prefixed. Using template literal.
+
+```typescript
+type Prefixed<T, Prefix extends string> = { [K in keyof T & string as `${Prefix}.${K}`]?: T[P]; }
+```
+
+### Usage
+
+```typescript
+const currentState = {
+  id: 0,
+  label: "test"
+};
+
+const newState: Prefixed<typeof currentState, 'update'> = {
+  "update.id": 1,
+  "update.label": "pass"
+};
+
+const failingState: Prefixed<typeof currentState, 'update'> = {
+  "error.label": "fail"
+};
+```
+
+[Example on TypeScript Playground](https://www.typescriptlang.org/play?ssl=4&ssc=90&pln=4&pc=88#code/FAYw9gdgzgLgBGARgKwIJwLxwN5ymAWwFMYALASwgHMAuOAIgENER6AaORqougRgAY4AXwDcwYDACeAByJwACgCciAM3IAPIgBMAPABUOS1RrhF1MIhC1Q8MRZSoA+TDjgBtANJxKcANZFJMBU4PTgAMlt7ak4bAAMAEmwjNXUhADpEjyFYgF0AagB+Oj1PHJFhcXBoeCRkACE6ZI1tHSlZIIQUVA56ZWkAG0YQInpnLGxgOCmGPsHhtPxiMgd6OnoIIgB3OAA3Rn6AVxG2SeneogGhojSuEboAJgBWYFFTuCA)
