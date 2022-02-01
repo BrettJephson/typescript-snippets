@@ -185,3 +185,33 @@ const fail: InferPrefix<Obj, ObjKeys, "100" | "200"> = "nothing"; // fails becau
 ```
 
 [Example on TypeScript Playground](https://www.typescriptlang.org/vo/play?#code/C4TwDgpgBAwgFhAxgawAoCcIDMCWAPAHgBUAaKAaSgj2AgDsATAZyieHRzoHMoAyKZBBAB7LFFJQAygFcsuPFRr1mrdpy4A+KAF4Ki2oxYADACQBvTlgjooGbPgC+5mXMdGoAfluZ5UAFxQdBAAbtYA3ABQEYjCdGxQwgBGAFY6UGYRrMIAthDAcOoAjAAMxQEAREQQ8YXlJJlMOXkF3ABMpRVV8a3lEQ6REaCQUADyKWlDEKIJKZGToynkQiy6giJiY8kDMXHAUGAAhkxMAfBIaD74BJtkm0sgTGTlJcXlUAA+UOXtr1q65Y1cvl1OVIjt4lgDjgADanBAoOzya4pW6LZZPF5vT7fUrlP5fOjCYHcUFAA)
+
+## Validate Template Literal (recursion)
+
+A bit of recursion goes a long way in TypeScript types. It doesn't have to be too unreadable either. 
+
+```typescript
+type ValidateNext<RestOfString extends string, Valid extends string, Subject extends string> = 
+    RestOfString extends Validate<RestOfString, Valid> ? Subject : never;
+
+type ValidateChar<Subject extends string, Valid extends string> = 
+    Subject extends `${Valid}-${infer RestOfString}` ? ValidateNext<RestOfString, Valid, Subject> : never;
+  
+type Validate<Subject extends string, Valid extends string> = 
+  Subject extends Valid ? Subject : ValidateChar<Subject, Valid>;
+```
+
+### Usage
+
+```typescript
+
+type ValidLetters = "a" | "b" | "c";
+
+const validator = <Subject extends string>(subject: Validate<Subject, ValidLetters>) => subject;
+
+const pass = validator("b-a-a-b-c-c-a");
+const fail = validator("b-A-D");
+```
+
+[Validate Letters example on Playground](https://www.typescriptlang.org/play?ssl=10&ssc=82&pln=3&pc=1#code/C4TwDgpgBAaghgGwJYBMAyFjAgJwM5QC8UARHCVAD6kBGF1JAxiQFAuiSyKpzYByEAB7AAPACUIeYAHkAZgGVgOJADsA5lCHYVKAlOXqANF2QoAktgC2AFXDQtEHXqWq1x+QFcaAKwiNgmsKOulD6rgB8RFAsULFQElJyigYaDk4mPNjikjIKLkYZ5la2kJEA-FCePn4BAFxQKhAAbrgA3Gwc0PCmvBAAwgAWcDgiVb7+gdohYQXdqBYQNnaTwc4pkcQxcWM1K+kABgAkAN5zRYslEAC+ALQnqrK48TlJ+WpX+1AVZ70CwtmJPIpYxnBZLSDuLzjYCReqNFo4dqxdjLH5ZHYTNLTN4g7jncH2ILpGZqDbRWIYgJYgig4rLCqUqD1NH9IYjSm40xgy7hdosRgAexUUigTTxvAFOCioyhu2poTe4QAFHhZf5meL0WrgJzUBgsLg8OEAJRESKq6r+PmC4UBMBwPAEYhinrASVKsg3Gg3Rg3cjG9o2kX2x1oIVqJ7OzXuz3e31wL0+v2J+Mp5PehOphPZ5M5ugBthBgKyOBIBBRF2ZGMZm4oEgBoA)
+
